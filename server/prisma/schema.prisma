@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id               Int       @id @default(autoincrement())
+  name             String
+  email            String    @unique
+  password         String
+  category         String
+  performanceScore Float     @default(0)
+  weakTopics       Json?
+  createdAt        DateTime  @default(now())
+  results          Result[]
+  doubts           Doubt[]
+  tasks            Task[]
+}
+
+model Quiz {
+  id        Int       @id @default(autoincrement())
+  title     String
+  topic     String
+  duration  Int
+  questions Question[]
+  results   Result[]
+}
+
+model Question {
+  id            Int    @id @default(autoincrement())
+  quiz          Quiz   @relation(fields: [quizId], references: [id])
+  quizId        Int
+  questionText  String
+  options       Json
+  correctAnswer String
+}
+
+model Result {
+  id             Int      @id @default(autoincrement())
+  student        Student  @relation(fields: [studentId], references: [id])
+  studentId      Int
+  quiz           Quiz     @relation(fields: [quizId], references: [id])
+  quizId         Int
+  score          Float
+  completionTime Int
+  createdAt      DateTime @default(now())
+}
+
+model Doubt {
+  id          Int      @id @default(autoincrement())
+  student     Student  @relation(fields: [studentId], references: [id])
+  studentId   Int
+  lessonTopic String
+  doubtText   String
+  aiResponse  String?
+  resolved    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  student     Student  @relation(fields: [studentId], references: [id])
+  studentId   Int
+  title       String
+  description String
+  difficulty  String
+  status      String
+  createdAt   DateTime @default(now())
+}
+
+model Lesson {
+  id            Int    @id @default(autoincrement())
+  topic         String
+  summary       String
+  teachingLevel String
+}
