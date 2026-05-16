@@ -7,6 +7,7 @@ const Login = () => {
   const { login } = useAuth();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value });
@@ -14,11 +15,16 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setError('');
+    setIsSubmitting(true);
+
     try {
       await login(form);
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -49,12 +55,16 @@ const Login = () => {
           />
         </div>
         {error && <p className="text-sm text-red-600">{error}</p>}
-        <button className="w-full rounded-2xl bg-slate-900 px-4 py-3 text-white hover:bg-slate-800" type="submit">
-          Login
+        <button
+          disabled={isSubmitting}
+          className="w-full rounded-2xl bg-slate-900 px-4 py-3 text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+          type="submit"
+        >
+          {isSubmitting ? 'Logging in…' : 'Login'}
         </button>
       </form>
       <p className="mt-4 text-sm text-slate-600">
-        New here? <Link className="text-slate-900 underline" to="/register">Create an account</Link>
+        New here? <Link className="text-slate-900 underline" to="/signup">Create an account</Link>
       </p>
     </div>
   );

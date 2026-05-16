@@ -9,6 +9,30 @@ export const AuthProvider = ({ children }) => {
     return stored ? JSON.parse(stored) : null;
   });
   const [token, setToken] = useState(() => localStorage.getItem('ai-classroom-token') || '');
+  const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    const restoreSession = async () => {
+      if (!token) {
+        setAuthLoading(false);
+        return;
+      }
+
+      try {
+        const data = await authService.me();
+        setUser(data.user);
+      } catch (error) {
+        setUser(null);
+        setToken('');
+        localStorage.removeItem('ai-classroom-user');
+        localStorage.removeItem('ai-classroom-token');
+      } finally {
+        setAuthLoading(false);
+      }
+    };
+
+    restoreSession();
+  }, [token]);
 
   useEffect(() => {
     if (user && token) {
@@ -39,7 +63,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, authLoading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

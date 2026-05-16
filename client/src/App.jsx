@@ -1,4 +1,5 @@
 import { Routes, Route, Link } from 'react-router-dom';
+import { useAuth } from './context/AuthContext';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -8,6 +9,8 @@ import Analytics from './pages/Analytics';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
+  const { user, logout } = useAuth();
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <header className="border-b bg-white shadow-sm">
@@ -15,11 +18,22 @@ const App = () => {
           <Link to="/" className="text-xl font-semibold text-slate-900">
             AI Smart Classroom
           </Link>
-          <nav className="space-x-4 text-slate-700">
+          <nav className="flex items-center gap-4 text-slate-700">
             <Link to="/">Home</Link>
-            <Link to="/dashboard">Dashboard</Link>
-            <Link to="/ai">AI Tutor</Link>
-            <Link to="/analytics">Analytics</Link>
+            {user && <Link to="/dashboard">Dashboard</Link>}
+            {user && <Link to="/ai">AI Tutor</Link>}
+            {user && <Link to="/analytics">Analytics</Link>}
+            {!user && <Link to="/login">Login</Link>}
+            {!user && <Link to="/signup">Signup</Link>}
+            {user && (
+              <button
+                type="button"
+                onClick={logout}
+                className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 transition hover:bg-slate-100"
+              >
+                Logout
+              </button>
+            )}
           </nav>
         </div>
       </header>
@@ -27,6 +41,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Register />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/ai" element={<ProtectedRoute><AiChat /></ProtectedRoute>} />

@@ -6,7 +6,11 @@ const authService = {
     return response.data;
   },
   register: async ({ name, email, password }) => {
-    const response = await api.post('/auth/register', { name, email, password });
+    const response = await api.post('/auth/signup', { name, email, password });
+    return response.data;
+  },
+  me: async () => {
+    const response = await api.get('/auth/me');
     return response.data;
   }
 };

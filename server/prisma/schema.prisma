@@ -14,6 +14,7 @@ model Student {
   password         String
   category         String
   performanceScore Float     @default(0)
+  progress         Float     @default(0)
   weakTopics       Json?
   createdAt        DateTime  @default(now())
   results          Result[]

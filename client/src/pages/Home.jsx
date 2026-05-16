@@ -14,8 +14,8 @@ const Home = () => {
         <Link to="/login" className="rounded-2xl bg-slate-900 px-6 py-4 text-center text-white transition hover:bg-slate-700">
           Login
         </Link>
-        <Link to="/register" className="rounded-2xl bg-slate-100 px-6 py-4 text-center text-slate-900 transition hover:bg-slate-200">
-          Register
+        <Link to="/signup" className="rounded-2xl bg-slate-100 px-6 py-4 text-center text-slate-900 transition hover:bg-slate-200">
+          Signup
         </Link>
       </div>
     </section>

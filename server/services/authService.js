@@ -20,8 +20,9 @@ export const registerUser = async ({ name, email, password }) => {
       name,
       email,
       password: hashedPassword,
-      category: 'general',
+      category: 'Average',
       performanceScore: 0,
+      progress: 0,
       weakTopics: []
     }
   });
