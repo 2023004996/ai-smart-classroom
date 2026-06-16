@@ -8,6 +8,7 @@ import AiChat from './pages/AiChat';
 import Analytics from './pages/Analytics';
 import Quiz from './pages/Quiz';
 import AdminDashboard from './pages/AdminDashboard';
+import Subjects from './pages/Subjects';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 import StudentRoute from './components/StudentRoute';
@@ -30,12 +31,14 @@ const App = () => {
             {user && user.role === 'ADMIN' && (
               <>
                 <Link to="/admin">Admin Dashboard</Link>
+                <Link to="/subjects">Subjects</Link>
               </>
             )}
 
             {user && user.role === 'STUDENT' && (
               <>
                 <Link to="/dashboard">Dashboard</Link>
+                <Link to="/subjects">Subjects</Link>
                 <Link to="/ai">AI Tutor</Link>
                 <Link to="/analytics">Analytics</Link>
               </>
@@ -61,6 +64,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
           <Route path="/dashboard" element={<StudentRoute><Dashboard /></StudentRoute>} />
+          <Route path="/subjects" element={<ProtectedRoute><Subjects /></ProtectedRoute>} />
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/ai" element={<ProtectedRoute><AiChat /></ProtectedRoute>} />
           <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />

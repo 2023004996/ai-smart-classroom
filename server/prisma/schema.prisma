@@ -75,8 +75,19 @@ model Task {
 }
 
 model Lesson {
-  id            Int    @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   topic         String
   summary       String
   teachingLevel String
+  subject       Subject? @relation(fields: [subjectId], references: [id])
+  subjectId     Int?
+}
+
+model Subject {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  lessons     Lesson[]
 }
