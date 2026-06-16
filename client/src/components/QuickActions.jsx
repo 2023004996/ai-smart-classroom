@@ -13,8 +13,8 @@ const QuickActions = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
-      description: 'Begin a new lesson',
-      onClick: () => navigate('/lessons'),
+      description: 'Begin a new lesson (warmup quiz first)',
+      onClick: () => navigate('/quiz'),
       color: 'bg-blue-500 hover:bg-blue-600'
     },
     {

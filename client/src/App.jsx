@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import AiChat from './pages/AiChat';
 import Analytics from './pages/Analytics';
+import Quiz from './pages/Quiz';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
@@ -44,6 +45,7 @@ const App = () => {
           <Route path="/signup" element={<Register />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/quiz" element={<Quiz />} />
           <Route path="/ai" element={<ProtectedRoute><AiChat /></ProtectedRoute>} />
           <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
         </Routes>
