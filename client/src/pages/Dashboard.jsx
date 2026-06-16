@@ -15,6 +15,9 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [simulatorScore, setSimulatorScore] = useState('');
+  const [simulatorLoading, setSimulatorLoading] = useState(false);
+  const [simulatorError, setSimulatorError] = useState('');
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -45,6 +48,43 @@ const Dashboard = () => {
       fetchDashboard();
     }
   }, [user, authLoading]);
+
+  const refreshDashboard = async () => {
+    try {
+      const response = await api.get('/student/dashboard');
+      setDashboardData(response.data);
+    } catch (err) {
+      console.error('Dashboard refresh failed:', err);
+    }
+  };
+
+  const handleSimulatorSubmit = async (event) => {
+    event.preventDefault();
+    setSimulatorError('');
+
+    const numericScore = Number(simulatorScore);
+    if (!Number.isFinite(numericScore) || numericScore < 0 || numericScore > 100) {
+      setSimulatorError('Enter a valid score between 0 and 100.');
+      return;
+    }
+
+    setSimulatorLoading(true);
+
+    try {
+      const response = await api.post('/student/update-performance', {
+        performanceScore: numericScore
+      });
+
+      await refreshDashboard();
+      setSimulatorScore('');
+    } catch (err) {
+      const message = err.response?.data?.message || 'Failed to update performance score.';
+      setSimulatorError(message);
+      console.error('Simulator submit error:', err);
+    } finally {
+      setSimulatorLoading(false);
+    }
+  };
 
   if (authLoading || loading) {
     return (
@@ -170,6 +210,55 @@ const Dashboard = () => {
       </section>
 
       {/* Additional Info Footer */}
+      <section className="rounded-2xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
+        <h4 className="text-sm font-semibold text-slate-700">Performance Simulator</h4>
+        <p className="mt-2 text-sm text-slate-600">
+          Submit a test score to update your performance category and refresh the dashboard instantly.
+        </p>
+
+        <form onSubmit={handleSimulatorSubmit} className="mt-6 space-y-4">
+          <div>
+            <label htmlFor="performanceScore" className="block text-sm font-medium text-slate-700">
+              Test Score
+            </label>
+            <input
+              id="performanceScore"
+              type="number"
+              min="0"
+              max="100"
+              step="1"
+              value={simulatorScore}
+              onChange={(e) => setSimulatorScore(e.target.value)}
+              className="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              placeholder="Enter a score between 0 and 100"
+              disabled={simulatorLoading}
+            />
+          </div>
+
+          {simulatorError && (
+            <p className="text-sm text-red-700">{simulatorError}</p>
+          )}
+
+          <button
+            type="submit"
+            disabled={simulatorLoading}
+            className="inline-flex items-center justify-center rounded-2xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-indigo-300 transition"
+          >
+            {simulatorLoading ? 'Updating...' : 'Update Score'}
+          </button>
+
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <p className="text-sm font-semibold text-slate-900">Example scores</p>
+            <ul className="mt-2 space-y-1 text-sm text-slate-600">
+              <li>30 → Below Average</li>
+              <li>55 → Average</li>
+              <li>75 → Above Average</li>
+              <li>95 → Excellent</li>
+            </ul>
+          </div>
+        </form>
+      </section>
+
       <section className="rounded-2xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
         <h4 className="text-sm font-semibold text-slate-700">Need Help?</h4>
         <p className="mt-2 text-sm text-slate-600">
