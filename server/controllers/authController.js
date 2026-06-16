@@ -12,8 +12,8 @@ export const login = async (req, res, next) => {
 
 export const signup = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
-    const data = await registerUser({ name, email, password });
+    const { name, email, password, role } = req.body;
+    const data = await registerUser({ name, email, password, role });
     res.status(201).json(data);
   } catch (error) {
     next(error);
@@ -27,8 +27,8 @@ export const getMe = async (req, res, next) => {
       return res.status(401).json({ message: 'Unauthorized.' });
     }
 
-    const { id, name, email, category, performanceScore, progress } = student;
-    res.json({ user: { id, name, email, category, performanceScore, progress } });
+    const { id, name, email, category, performanceScore, progress, role } = student;
+    res.json({ user: { id, name, email, category, performanceScore, progress, role } });
   } catch (error) {
     next(error);
   }

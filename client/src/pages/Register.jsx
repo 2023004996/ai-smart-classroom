@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 const Register = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
-  const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '', role: 'STUDENT' });
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -25,7 +25,7 @@ const Register = () => {
     setIsSubmitting(true);
 
     try {
-      await register({ name: form.name, email: form.email, password: form.password });
+      await register({ name: form.name, email: form.email, password: form.password, role: form.role });
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed.');
@@ -81,6 +81,18 @@ const Register = () => {
             required
             className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-400"
           />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700">Role</label>
+          <select
+            name="role"
+            value={form.role}
+            onChange={handleChange}
+            className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-400"
+          >
+            <option value="STUDENT">Student</option>
+            <option value="ADMIN">Admin</option>
+          </select>
         </div>
         {error && <p className="text-sm text-red-600">{error}</p>}
         <button

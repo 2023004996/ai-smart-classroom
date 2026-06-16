@@ -7,7 +7,10 @@ import Dashboard from './pages/Dashboard';
 import AiChat from './pages/AiChat';
 import Analytics from './pages/Analytics';
 import Quiz from './pages/Quiz';
+import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
+import StudentRoute from './components/StudentRoute';
 
 const App = () => {
   const { user, logout } = useAuth();
@@ -21,11 +24,23 @@ const App = () => {
           </Link>
           <nav className="flex items-center gap-4 text-slate-700">
             <Link to="/">Home</Link>
-            {user && <Link to="/dashboard">Dashboard</Link>}
-            {user && <Link to="/ai">AI Tutor</Link>}
-            {user && <Link to="/analytics">Analytics</Link>}
             {!user && <Link to="/login">Login</Link>}
             {!user && <Link to="/signup">Signup</Link>}
+
+            {user && user.role === 'ADMIN' && (
+              <>
+                <Link to="/admin">Admin Dashboard</Link>
+              </>
+            )}
+
+            {user && user.role === 'STUDENT' && (
+              <>
+                <Link to="/dashboard">Dashboard</Link>
+                <Link to="/ai">AI Tutor</Link>
+                <Link to="/analytics">Analytics</Link>
+              </>
+            )}
+
             {user && (
               <button
                 type="button"
@@ -44,7 +59,8 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Register />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+          <Route path="/dashboard" element={<StudentRoute><Dashboard /></StudentRoute>} />
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/ai" element={<ProtectedRoute><AiChat /></ProtectedRoute>} />
           <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />

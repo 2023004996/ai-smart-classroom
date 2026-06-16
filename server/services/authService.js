@@ -3,10 +3,10 @@ import jwt from 'jsonwebtoken';
 import prisma from '../config/db.js';
 
 const createToken = (student) => {
-  return jwt.sign({ id: student.id, email: student.email }, process.env.JWT_SECRET, { expiresIn: '7d' });
+  return jwt.sign({ id: student.id, email: student.email, role: student.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 };
 
-export const registerUser = async ({ name, email, password }) => {
+export const registerUser = async ({ name, email, password, role = 'STUDENT' }) => {
   const existing = await prisma.student.findUnique({ where: { email } });
   if (existing) {
     const error = new Error('Email is already registered.');
@@ -23,12 +23,13 @@ export const registerUser = async ({ name, email, password }) => {
       category: 'Average',
       performanceScore: 0,
       progress: 0,
-      weakTopics: []
+      weakTopics: [],
+      role
     }
   });
   const token = createToken(student);
 
-  return { user: { id: student.id, name: student.name, email: student.email }, token };
+  return { user: { id: student.id, name: student.name, email: student.email, role: student.role }, token };
 };
 
 export const loginUser = async (email, password) => {
@@ -47,5 +48,5 @@ export const loginUser = async (email, password) => {
   }
 
   const token = createToken(student);
-  return { user: { id: student.id, name: student.name, email: student.email }, token };
+  return { user: { id: student.id, name: student.name, email: student.email, role: student.role }, token };
 };

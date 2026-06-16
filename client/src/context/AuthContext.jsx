@@ -21,6 +21,8 @@ export const AuthProvider = ({ children }) => {
       try {
         const data = await authService.me();
         setUser(data.user);
+        // ensure token stored separately
+        if (!token) setToken(localStorage.getItem('ai-classroom-token') || '');
       } catch (error) {
         setUser(null);
         setToken('');

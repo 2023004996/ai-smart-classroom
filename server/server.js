@@ -6,6 +6,7 @@ import aiRoutes from './routes/aiRoutes.js';
 import classroomRoutes from './routes/classroomRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
 import quizRoutes from './routes/quizRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 import { errorHandler } from './middleware/errorMiddleware.js';
 
 dotenv.config();
@@ -21,6 +22,7 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/classrooms', classroomRoutes);
 app.use('/api/student', studentRoutes);
 app.use('/api/quiz', quizRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'AI Smart Classroom backend is running.' });
